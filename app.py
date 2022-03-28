@@ -131,8 +131,6 @@ def main(text):
     </style>
     </head>
     <body>
-    Scroll sideways to see all the text if it is wider than the screen.
-    <button id="btn">jump to restoration area</button>
     <div class="container">
     <table cellspacing="0">
       <tr>
