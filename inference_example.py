@@ -118,11 +118,6 @@ def main(argv):
       alphabet=alphabet,
       vocab_char_size=vocab_char_size,
       vocab_word_size=vocab_word_size)
-  if FLAGS.restore_json:
-    with open(FLAGS.restore_json, 'w') as f:
-      f.write(restoration.json(indent=2))
-  else:
-    print('Restoration:', restoration.json())
   return attribution.json(), restoration.json()
 
 if __name__ == '__main__':
