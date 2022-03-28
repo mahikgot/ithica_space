@@ -1,4 +1,4 @@
-#coding=uft8
+#coding=uft-8
 import subprocess
 import jinja2
 import gradio
