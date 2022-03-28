@@ -26,6 +26,9 @@ from ithaca.models.model import Model
 from ithaca.util.alphabet import GreekAlphabet
 import jax
 
+def get_subregion_name(id, region_map):
+  return region_map['sub']['names_inv'][region_map['sub']['ids_inv'][id]]
+
 def load_checkpoint(path):
   """Loads a checkpoint pickle.
 
@@ -172,6 +175,8 @@ def main(text):
     </body>
     </html>
     """)
+  locations = []
+
   if not 50 <= len(text) <= 750:
     raise app.UsageError(
         f'Text should be between 50 and 750 chars long, but the input was '
@@ -202,9 +207,11 @@ def main(text):
       vocab_word_size=vocab_word_size)
 
   prediction_idx = set(i for i, c in enumerate(restoration.input_text) if c == '?')
+
+  attrib_dict = {get_subregion_name(l.location_id, region_map): l.score for l in attribution[3]}
   return restore_template.render(
           restoration_results=restoration,
-          prediction_idx=prediction_idx)
+          prediction_idx=prediction_idx), attrib_dict
 gradio.Interface(
         main,
         "text",
