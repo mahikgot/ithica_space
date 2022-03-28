@@ -222,4 +222,5 @@ gradio.Interface(
         main,
         inputs="text",
         outputs=["html", gradio.outputs.Label(label="Geographical Attribution")],
-        examples=examples).launch(enable_queue=True)
+        examples=examples,
+        description='spaces demo for Ithaca').launch(enable_queue=True)
