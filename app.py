@@ -64,6 +64,117 @@ def load_checkpoint(path):
 
 def main(text):
 
+  prediction_idx = set(i for i, c in enumerate(restoration_results.input_text) if c == '?')
+
+  pred_template = jinja2.Template("""<!DOCTYPE html>
+    <html>
+    <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <style>
+    body {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 400;
+    }
+    .container {
+      overflow-x: scroll;
+      scroll-behavior: smooth;
+    }
+    table {
+      table-layout: fixed;
+      font-size: 16px;
+      padding: 0;
+      white-space: nowrap;
+    }
+    table tr:first-child {
+      font-weight: bold;
+    }
+    table td {
+      border-bottom: 1px solid #ccc;
+      padding: 3px 0;
+    }
+    table td.header {
+      font-family: Roboto, Helvetica, sans-serif;
+      text-align: right;
+      position: -webkit-sticky;
+      position: sticky;
+      background-color: white;
+    }
+    .header-1 {
+      background-color: white;
+      width: 120px;
+      min-width: 120px;
+      max-width: 120px;
+      left: 0;
+    }
+    .header-2 {
+      left: 120px;
+      width: 50px;
+      max-width: 50px;
+      min-width: 50px;
+      padding-right: 5px;
+    }
+    table td:not(.header) {
+      border-left: 1px solid black;
+      padding-left: 5px;
+    }
+    .header-2col {
+      width: 170px;
+      min-width: 170px;
+      max-width: 170px;
+      left: 0;
+      padding-right: 5px;
+    }
+    .pred {
+      background: #ddd;
+    }
+    </style>
+    </head>
+    <body>
+    Scroll sideways to see all the text if it is wider than the screen.
+    <button id="btn">jump to restoration area</button>
+    <div class="container">
+    <table cellspacing="0">
+      <tr>
+        <td colspan="2" class="header header-2col">Input text:</td>
+        <td>
+        {% for char in restoration_results.input_text -%}
+          {%- if loop.index0 in prediction_idx -%}
+            <span class="pred">{{char}}</span>
+          {%- else -%}
+            {{char}}
+          {%- endif -%}
+        {%- endfor %}
+        </td>
+      </tr>
+      <!-- Predictions: -->
+      {% for pred in restoration_results.predictions %}
+      <tr>
+        <td class="header header-1">Hypothesis {{ loop.index }}:</td>
+        <td class="header header-2">{{ "%.1f%%"|format(100 * pred.score) }}</td>
+        <td>
+          {% for char in pred.text -%}
+            {%- if loop.index0 in prediction_idx -%}
+              <span class="pred">{{char}}</span>
+            {%- else -%}
+              {{char}}
+            {%- endif -%}
+          {%- endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    </div>
+    <script>
+    document.querySelector('#btn').addEventListener('click', () => {
+      const pred = document.querySelector(".pred");
+      pred.scrollIntoViewIfNeeded();
+    });
+    </script>
+    </body>
+    </html>
+    """)
   if not 50 <= len(text) <= 750:
     raise app.UsageError(
         f'Text should be between 50 and 750 chars long, but the input was '
@@ -92,10 +203,10 @@ def main(text):
       alphabet=alphabet,
       vocab_char_size=vocab_char_size,
       vocab_word_size=vocab_word_size)
-  print(attribution.json())
-  return attribution.json(), restoration.json()
-
+  return pred_template.render(
+          restoration_results=restoration,
+          prediction_idx=prediction_idx)
 gradio.Interface(
         main,
         "text",
-        ["json", "json"]).launch(enable_queue=True)
+        "html").launch(enable_queue=True)
