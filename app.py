@@ -215,4 +215,4 @@ def main(text):
 gradio.Interface(
         main,
         "text",
-        "html").launch(enable_queue=True)
+        ["html", "label"]).launch(enable_queue=True)
