@@ -123,7 +123,7 @@ def main(argv):
       f.write(restoration.json(indent=2))
   else:
     print('Restoration:', restoration.json())
-
+  return attribution.json(), restoration.json()
 
 if __name__ == '__main__':
   app.run(main)
