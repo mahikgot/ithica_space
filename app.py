@@ -208,7 +208,7 @@ def main(text):
 
   prediction_idx = set(i for i, c in enumerate(restoration.input_text) if c == '?')
 
-  attrib_dict = {get_subregion_name(l.location_id, region_map): l.score for l in attribution[3]}
+  attrib_dict = {get_subregion_name(l.location_id, region_map): l.score for l in attribution.locations[:3]}
   return restore_template.render(
           restoration_results=restoration,
           prediction_idx=prediction_idx), attrib_dict
