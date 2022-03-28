@@ -215,4 +215,4 @@ def main(text):
 gradio.Interface(
         main,
         "text",
-        ["html", gradio.outputs.Label(self, label="Geographical Attribution")]).launch(enable_queue=True)
+        ["html", gradio.outputs.Label(label="Geographical Attribution")]).launch(enable_queue=True)
