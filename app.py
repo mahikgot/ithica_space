@@ -146,7 +146,7 @@ def main(text):
         </td>
       </tr>
       <!-- Predictions: -->
-      {% for pred in restoration_results.predictions %}
+      {% for pred in restoration_results.predictions[:3] %}
       <tr>
         <td class="header header-1">Hypothesis {{ loop.index }}:</td>
         <td class="header header-2">{{ "%.1f%%"|format(100 * pred.score) }}</td>
