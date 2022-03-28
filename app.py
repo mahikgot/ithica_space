@@ -216,7 +216,7 @@ examples = []
 with open('example_input.txt', encoding='utf8') as f:
     for line in f:
         examples.append(line)
-
+print(examples)
 gradio.Interface(
         main,
         inputs="text",
