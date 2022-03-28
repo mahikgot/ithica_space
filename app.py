@@ -92,10 +92,10 @@ def main(text):
       vocab_char_size=vocab_char_size,
       vocab_word_size=vocab_word_size)
   print(attribution.json())
-  return attribution.json(), restoration.json()
+  return attribution.json()
 
 gradio.Interface(
         main,
         "text",
-        ["json", "json"]).launch()
+        "json").launch()
 
