@@ -91,6 +91,7 @@ def main(text):
       alphabet=alphabet,
       vocab_char_size=vocab_char_size,
       vocab_word_size=vocab_word_size)
+  print(attribution.json())
   return attribution.json(), restoration.json()
 
 gradio.Interface(
