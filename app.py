@@ -215,4 +215,4 @@ def main(text):
 gradio.Interface(
         main,
         "text",
-        ["html", "label"]).launch(enable_queue=True)
+        ["html", gradio.outputs.Label(self, label="Location Prediction"]).launch(enable_queue=True)
