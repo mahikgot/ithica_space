@@ -1,7 +1,6 @@
 import subprocess
-import sys
 
 subprocess.run(
-        [sys.executable, "pip", "install", "."])
+        ["curl", "--output", "checkpoint.pkl", "https://storage.googleapis.com/ithaca-resources/models/checkpoint_v1.pkl"])
 subprocess.run(
-        [sys.executable, "python", "inference_example.py", "--help"])
+        ["python", "inference_example.py", "--help"])
