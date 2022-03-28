@@ -64,9 +64,8 @@ def load_checkpoint(path):
 
 def main(text):
 
-  prediction_idx = set(i for i, c in enumerate(restoration_results.input_text) if c == '?')
 
-  pred_template = jinja2.Template("""<!DOCTYPE html>
+  restore_template = jinja2.Template("""<!DOCTYPE html>
     <html>
     <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -203,7 +202,9 @@ def main(text):
       alphabet=alphabet,
       vocab_char_size=vocab_char_size,
       vocab_word_size=vocab_word_size)
-  return pred_template.render(
+
+  prediction_idx = set(i for i, c in enumerate(restoration.input_text) if c == '?')
+  return restore_template.render(
           restoration_results=restoration,
           prediction_idx=prediction_idx)
 gradio.Interface(
