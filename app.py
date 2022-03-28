@@ -96,5 +96,5 @@ def main(text):
 gradio.Interface(
         main,
         "text",
-        ["json", "json"]).launch()
+        ["json", "json"]).launch(share=True)
 
