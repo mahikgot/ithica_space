@@ -1,4 +1,5 @@
 import subprocess
+import jinja2
 import gradio
 
 subprocess.run(
