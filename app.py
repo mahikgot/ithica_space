@@ -98,5 +98,3 @@ gradio.Interface(
         main,
         "text",
         ["json", "json"].launch(enable_queue=True)
-
-
