@@ -221,4 +221,5 @@ gradio.Interface(
         outputs=["html", gradio.outputs.Label(label="Geographical Attribution")],
         examples=examples,
         title='Spaces Demo for Ithaca',
-        description='Restoration and Attribution of ancient Greek texts').launch(enable_queue=True)
+        description='Restoration and Attribution of ancient Greek texts.
+            Represent missing characters at "-", and characters to be predicted as "?"').launch(enable_queue=True)
