@@ -220,4 +220,5 @@ gradio.Interface(
         inputs="text",
         outputs=["html", gradio.outputs.Label(label="Geographical Attribution")],
         examples=examples,
-        description='spaces demo for Ithaca').launch(enable_queue=True)
+        title='Spaces Demo for Ithaca',
+        description='Restoration and Attribution of ancient Greek texts').launch(enable_queue=True)
