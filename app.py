@@ -221,5 +221,5 @@ gradio.Interface(
         outputs=["html", gradio.outputs.Label(label="Geographical Attribution")],
         examples=examples,
         title='Spaces Demo for Ithaca',
-        description='Restoration and Attribution of ancient Greek texts. Represent missing characters as "-", and characters to be predicted as "?" (up to 10, does not need to be consecutive)').launch(enable_queue=True)
+        description='Restoration and Attribution of ancient Greek texts. Represent missing characters as "-", and characters to be predicted as "?" (up to 10, does not need to be consecutive)<br> <br><a href="https://ithaca.deepmind.com/" target="_blank">blogpost</a>').launch(enable_queue=True)
 
