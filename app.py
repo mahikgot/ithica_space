@@ -226,7 +226,6 @@ def main(text):
     </body>
     </html>
     """)
-  locations = []
 
   if not 50 <= len(text) <= 750:
     raise app.UsageError(
@@ -268,7 +267,7 @@ with open('example_input.txt', encoding='utf8') as f:
 gradio.Interface(
         main,
         inputs=gradio.inputs.Textbox(lines=3),
-        outputs=['html', gradio.outputs.Label(label='Geographical Attribution'), 'html'],
+        outputs=['html', gradio.outputs.Label(label='Geographical Attribution'), gradio.outputs.HTML(label='Chronological Attribution')],
         examples=examples,
         title='Spaces Demo for Ithaca',
         description='Restoration and Attribution of ancient Greek texts made by DeepMind. Represent missing characters as "-", and characters to be predicted as "?" (up to 10, does not need to be consecutive)<br> <br><a href="https://ithaca.deepmind.com/" target="_blank">blogpost</a>').launch(enable_queue=True)
