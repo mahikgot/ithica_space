@@ -31,7 +31,18 @@ from ithaca.util.alphabet import GreekAlphabet
 import jax
 
 
-def create_time_plot(attribution, dataset_config):
+def create_time_plot(attribution):
+    class dataset_config:
+      date_interval = 10
+      date_max = 800
+      date_min = -800
+
+    def bce_ad(d):
+      if d < 0:
+        return f'{abs(d)} BCE'
+      elif d > 0:
+        return f'{abs(d)} AD'
+      return 0
     #compute scores
     date_pred_y = np.array(attribution.year_scores)
     date_pred_x = np.arange(
@@ -247,13 +258,9 @@ def main(text):
 
   prediction_idx = set(i for i, c in enumerate(restoration.input_text) if c == '?')
   attrib_dict = {get_subregion_name(l.location_id, region_map): l.score for l in attribution.locations[:3]}
-  class dataset_config:
-      date_interval = 10
-      date_max = 800
-      date_min = -800
   return restore_template.render(
           restoration_results=restoration,
-          prediction_idx=prediction_idx), attrib_dict, create_time_plot(attribution, dataset_config)
+          prediction_idx=prediction_idx), attrib_dict, create_time_plot(attribution)
 
 with open('example_input.txt', encoding='utf8') as f:
     examples = [line for line in f]
