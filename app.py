@@ -1,6 +1,10 @@
 import subprocess
 import jinja2
 import gradio
+import matplotlib.pyplot as plt
+import numpy as np
+import base64
+from io import BytesIO
 
 subprocess.run(
         ["curl", "--output", "checkpoint.pkl", "https://storage.googleapis.com/ithaca-resources/models/checkpoint_v1.pkl"])
@@ -26,6 +30,44 @@ from ithaca.models.model import Model
 from ithaca.util.alphabet import GreekAlphabet
 import jax
 
+
+def create_time_plot(attribution, dataset_config):
+    #compute scores
+    date_pred_y = np.array(attribution.year_scores)
+    date_pred_x = np.arange(
+      dataset_config.date_min + dataset_config.date_interval / 2,
+      dataset_config.date_max + dataset_config.date_interval / 2,
+      dataset_config.date_interval)
+    date_pred_argmax = date_pred_y.argmax(
+    ) * dataset_config.date_interval + dataset_config.date_min + dataset_config.date_interval // 2
+    date_pred_avg = np.dot(date_pred_y, date_pred_x)
+
+    # Plot figure
+    fig = plt.figure(figsize=(10, 5), dpi=100)
+
+    plt.bar(date_pred_x, date_pred_y, color='#f2c852', width=10., label='Ithaca distribution')
+    plt.axvline(x=date_pred_avg, color='#67ac5b', linewidth=2., label='Ithaca average')
+
+
+    plt.ylabel('Probability', fontsize=14)
+    yticks = np.arange(0, 1.1, 0.1)
+    yticks_str = list(map(lambda x: f'{int(x*100)}%', yticks))
+    plt.yticks(yticks, yticks_str, fontsize=12, rotation=0)
+    plt.ylim(0, int((date_pred_y.max()+0.1)*10)/10)
+
+    plt.xlabel('Date', fontsize=14)
+    xticks = list(range(dataset_config.date_min, dataset_config.date_max + 1, 25))
+    xticks_str = list(map(bce_ad, xticks))
+    plt.xticks(xticks, xticks_str, fontsize=12, rotation=0)
+    plt.xlim(int(date_pred_avg - 100), int(date_pred_avg + 100))
+    plt.legend(loc='upper right', fontsize=12)
+
+    #encode to base64 for html parsing
+    tmpfile = BytesIO()
+    fig.savefig(tmpfile.getvalue()).decode('utf-8')
+    html = '<div>' + '<img src="data:image/png;base64,{}">'.format(encoded.decode('utf-8')) + '</div>'
+
+    return html
 def get_subregion_name(id, region_map):
   return region_map['sub']['names_inv'][region_map['sub']['ids_inv'][id]]
 
@@ -64,10 +106,7 @@ def load_checkpoint(path):
 
   return checkpoint['model_config'], region_map, alphabet, params, forward
 
-
 def main(text):
-
-
   restore_template = jinja2.Template("""<!DOCTYPE html>
     <html>
     <head>
@@ -207,18 +246,21 @@ def main(text):
       vocab_word_size=vocab_word_size)
 
   prediction_idx = set(i for i, c in enumerate(restoration.input_text) if c == '?')
-
   attrib_dict = {get_subregion_name(l.location_id, region_map): l.score for l in attribution.locations[:3]}
+  class dataset_config:
+      date_interval = 10
+      date_max = 800
+      date_min = -800
   return restore_template.render(
           restoration_results=restoration,
-          prediction_idx=prediction_idx), attrib_dict
+          prediction_idx=prediction_idx), attrib_dict, create_time_plot(attribution, dataset_config)
 
 with open('example_input.txt', encoding='utf8') as f:
     examples = [line for line in f]
 gradio.Interface(
         main,
         inputs=gradio.inputs.Textbox(lines=3),
-        outputs=["html", gradio.outputs.Label(label="Geographical Attribution")],
+        outputs=['html', gradio.outputs.Label(label='Geographical Attribution'), 'html'],
         examples=examples,
         title='Spaces Demo for Ithaca',
         description='Restoration and Attribution of ancient Greek texts made by DeepMind. Represent missing characters as "-", and characters to be predicted as "?" (up to 10, does not need to be consecutive)<br> <br><a href="https://ithaca.deepmind.com/" target="_blank">blogpost</a>').launch(enable_queue=True)
