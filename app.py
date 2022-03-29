@@ -217,7 +217,7 @@ with open('example_input.txt', encoding='utf8') as f:
     examples = [line for line in f]
 gradio.Interface(
         main,
-        inputs="text",
+        inputs=gradio.inputs.Textbox(lines=3),
         outputs=["html", gradio.outputs.Label(label="Geographical Attribution")],
         examples=examples,
         title='Spaces Demo for Ithaca',
