@@ -77,7 +77,7 @@ def create_time_plot(attribution):
     tmpfile = BytesIO()
     fig.savefig(tmpfile, format='png')
     encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
-    html = '<h3> Chronological Attribution </h3>' + '<div>' + '<img src="data:image/png;charset=utf-8;base64,{}">'.format(encoded) + '</div>'
+    html = '<div>' + '<img src="data:image/png;charset=utf-8;base64,{}">'.format(encoded) + '</div>'
 
     return html
 def get_subregion_name(id, region_map):
@@ -185,7 +185,6 @@ def main(text):
     </style>
     </head>
     <body>
-    <h3> Restoration </h3>
     <div class="container">
     <table cellspacing="0">
       <tr>
@@ -268,7 +267,7 @@ with open('example_input.txt', encoding='utf8') as f:
 gradio.Interface(
         main,
         inputs=gradio.inputs.Textbox(lines=3),
-        outputs=['html', gradio.outputs.Label(label='Geographical Attribution'), 'html'],
+        outputs=[gradio.outputs.HTML(label='Restoration'), gradio.outputs.Label(label='Geographical Attribution'), gradio.outputs.HTML(label='Chronological Attribution')],
         examples=examples,
         title='Spaces Demo for Ithaca',
         description='Restoration and Attribution of ancient Greek texts made by DeepMind. Represent missing characters as "-", and characters to be predicted as "?" (up to 10, does not need to be consecutive)<br> <br><a href="https://ithaca.deepmind.com/" target="_blank">blogpost</a>').launch(enable_queue=True)
