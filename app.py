@@ -77,7 +77,7 @@ def create_time_plot(attribution):
     tmpfile = BytesIO()
     fig.savefig(tmpfile, format='png')
     encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
-    html = '<div>' + '<img src="data:image/png;base64,{{}}">'+ '</div>'
+    html = '<div>' + '<img src="data:image/png;base64,{{}}">'.format(encoded.decode('utf-8')) + '</div>'
 
     return html
 def get_subregion_name(id, region_map):
