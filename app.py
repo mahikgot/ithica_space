@@ -212,11 +212,9 @@ def main(text):
   return restore_template.render(
           restoration_results=restoration,
           prediction_idx=prediction_idx), attrib_dict
-examples = []
+
 with open('example_input.txt', encoding='utf8') as f:
-    for line in f:
-        examples.append(line)
-print(examples)
+    examples = [line for line in f]
 gradio.Interface(
         main,
         inputs="text",
