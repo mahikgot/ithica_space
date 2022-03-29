@@ -75,7 +75,8 @@ def create_time_plot(attribution):
 
     #encode to base64 for html parsing
     tmpfile = BytesIO()
-    fig.savefig(tmpfile.getvalue()).decode('utf-8')
+    fig.savefig(tmpfile, format='png')
+    encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
     html = '<div>' + '<img src="data:image/png;base64,{}">'.format(encoded.decode('utf-8')) + '</div>'
 
     return html
