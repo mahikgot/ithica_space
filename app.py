@@ -222,4 +222,4 @@ gradio.Interface(
         examples=examples,
         title='Spaces Demo for Ithaca',
         description='Restoration and Attribution of ancient Greek texts.
-            Represent missing characters at "-", and characters to be predicted as "?"').launch(enable_queue=True)
+            Represent missing characters at "-", and characters to be predicted as "?" (up to 10)').launch(enable_queue=True)
